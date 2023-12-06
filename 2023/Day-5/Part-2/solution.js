@@ -48,11 +48,22 @@ function getFinalMapping(maps) {
     if (a[0] !== b[0]) return a[0] - b[0]
     return a[1] - b[1] 
   })
+
   console.log(finalMapping)
 }
 
 function mergeIntervals(intervals) {
-  
+  let i = 0;
+
+  while (i < intervals.length) {
+    if (overlap(intervals[i], intervals[i+1])) {
+      
+    }
+  }
+}
+
+function overlap(a, b) {
+  return (a[0] <= b[0] && a[1] >= b[0]) || (b[0] <= a[0] && b[1] >= a[0])
 }
 
 function getLocation(seed) {
