@@ -80,5 +80,50 @@ require('yargs')
       }
     }
   })
+  .command('get-input <year> <day>', 'Creates an input.txt file with the input file for the given year and day Advent of Code task', (yargs) => {
+    return yargs.positional('year', {
+      type: 'number',
+      describe: 'Advent of Code Year'
+    }).positional('day', {
+      type: 'number',
+      describe: 'Day of the task'
+    })
+  }, function (argv) { 
+    const https = require('https');
+    const fs = require('fs');
+    const path = require('path');
+    const rootDir = process.cwd();
+    const AOC_SESSION_KEY = "53616c7465645f5f6cf402b05b5aae5a2bb9fc156358c10687685454e4d8ca20aca100b8130949bab3a0141c1fc1cb69142e5221ffb365084ba37bbe5bd04536"
+    
+    const inputFilePath = path.join(rootDir, `./${argv.year}/Day-${argv.day}/input.txt`);
+    const url = `https://adventofcode.com/${argv.year}/day/${argv.day}/input`;
+
+    const options = {
+      rejectUnauthirized: false,
+      headers: {
+        'Cookie': `session=${AOC_SESSION_KEY}`
+      }
+    }
+
+    https.get(url, options, (response) => {
+      let data = '';
+    
+      response.on('data', (chunk) => {
+        data += chunk;
+      });
+    
+      response.on('end', () => {
+        fs.writeFile(inputFilePath, data, (err) => {
+          if (err) {
+            console.error(`Error writing to file: ${err.message}`);
+          } else {
+            console.log('Data has been written to input.txt');
+          }
+        });
+      });
+    }).on('error', (error) => {
+      console.error(`Error: ${error.message}`);
+    });
+  })
   .help()
   .argv
