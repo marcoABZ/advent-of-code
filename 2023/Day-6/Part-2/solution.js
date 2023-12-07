@@ -1,26 +1,20 @@
 const fs = require('fs');
 
-const filePath = './demo.txt';
+const filePath = './input.txt';
 
-const [times, distances] = 
+const [time, distance] = 
   fs.readFileSync(filePath, "utf-8")
     .trim()
     .split("\n")
     .map(line => 
-      line.split(":")[1]
-          .split(" ")
-          .filter(el => el !== '')
-          .reduce((prev, curr) => prev + curr, '')
-        );
+      Number(line.split(":")[1]
+                 .split(" ")
+                 .filter(el => el !== '')
+                 .reduce((prev, curr) => prev + curr, ''))
+    );
 
-const numberOfRaces = times.length;
-let numberOfPossibilities = 1;
-
-for(let i = 0; i < numberOfRaces; i++) {
-  const [minHold, maxHold] = getHoldingLimits(times[i], distances[i])
-  numberOfPossibilities *= (maxHold - minHold + 1)
-}
-
+const [minHold, maxHold] = getHoldingLimits(time, distance)
+const numberOfPossibilities = (maxHold - minHold + 1)
 console.log(numberOfPossibilities)
 
 function getHoldingLimits(time, distance) {
