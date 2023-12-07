@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const filePath = './input.txt';
+const filePath = '../input.txt';
 const grid = fs.readFileSync(filePath, "utf-8").trim().split("\n").map(line => { return Array.from(line) });
 let sum = 0;
 let currentNumber = 0;

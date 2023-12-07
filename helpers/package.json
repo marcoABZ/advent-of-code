@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "readline-sync": "^1.4.10",
+    "yargs": "^17.7.2"
+  },
+  "name": "helpers",
+  "version": "1.0.0",
+  "main": "makeFolder.js",
+  "bin": {
+    "aoc-folder": "./makeFolder.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

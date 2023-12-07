@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const filePath = './input.txt';
+const filePath = '../input.txt';
 
 const [time, distance] = 
   fs.readFileSync(filePath, "utf-8")

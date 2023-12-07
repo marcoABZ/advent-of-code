@@ -1,7 +1,7 @@
 const fs = require('fs');
 const readline = require('readline');
 
-const filePath = './input.txt';
+const filePath = '../input.txt';
 let sum = 0;
 const numbers = {
   '0': '0',

@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const filePath = './input.txt';
+const filePath = '../input.txt';
 
 console.time('Total')
 const lines = fs.readFileSync(filePath, "utf-8").trim().split("\n");

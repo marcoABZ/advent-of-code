@@ -1,0 +1,84 @@
+#!/usr/bin/env node
+
+require('yargs')
+  .scriptName("aoc-folder")
+  .usage('$0 <cmd> [args]')
+  .command('create-folder-structure <year>', 'Creates the entire folder structure for solving Advent of Code on a given year', (yargs) => {
+    return yargs.positional('year', {
+      type: 'number',
+      describe: 'Advent of Code Year'
+    })
+  }, function (argv) {
+    const fs = require('fs');
+    const path = require('path');
+    const rootDir = process.cwd();
+
+    const yearFolder = path.join(rootDir, `${argv.year}`);
+    try {
+      if (!fs.existsSync(yearFolder)) {
+        fs.mkdirSync(yearFolder, { recursive: true });
+      } else {
+        console.log(`Folder for year ${argv.year} already exists. Skipping creation.`);
+      }
+    } catch (err) {
+      console.error("Could not create or check year directory", err);
+    }
+
+    for (let i = 1; i <= 25; i++) {
+      const dayFolder = path.join(rootDir, `${argv.year}/Day-${i}`);
+      const part1Folder = path.join(rootDir, `${argv.year}/Day-${i}/Part-1`);
+      const part2Folder = path.join(rootDir, `${argv.year}/Day-${i}/Part-2`);
+      
+      try {
+        fs.mkdirSync(dayFolder, { recursive: true });
+        fs.mkdirSync(part1Folder, { recursive: true }); 
+        fs.mkdirSync(part2Folder, { recursive: true }); 
+      } catch (err) {
+        console.error(`Could not create or check directory ./${argv.year}/Day-${i}`, err);
+        continue;
+      }
+
+      const demoFilePath = path.join(rootDir, `./${argv.year}/Day-${i}/demo.txt`);
+      try {
+        if (!fs.existsSync(demoFilePath)) {
+          fs.closeSync(fs.openSync(demoFilePath, 'w'));
+        } else {
+          console.log(`demo.txt file already existed for day ${i}. Skipping creation.`)
+        }
+      } catch (err) {
+        console.error(`Could not create or check file ${demoFilePath}`, err);
+      }
+
+      const solution1FilePath = path.join(rootDir, `./${argv.year}/Day-${i}/Part-1/solution.js`);
+      const solution2FilePath = path.join(rootDir, `./${argv.year}/Day-${i}/Part-2/solution.js`);
+      try {
+        if (!fs.existsSync(solution1FilePath)) {
+          const writeStream = fs.createWriteStream(solution1FilePath);
+
+          writeStream.write("const fs = require('fs');\n\n");
+          writeStream.write("const filePath = '../demo.txt';\n");
+          writeStream.write(`const lines = fs.readFileSync(filePath, "utf-8").trim().split("\\n");\n`);
+  
+          writeStream.end();
+        } else {
+          console.log(`Solution file for day ${i} part 1 already existed. Skipping creation.`)
+        };
+
+        if (!fs.existsSync(solution2FilePath)) {
+          const writeStream = fs.createWriteStream(solution2FilePath);
+
+          writeStream.write("const fs = require('fs');\n\n");
+          writeStream.write("const filePath = '../demo.txt';\n");
+          writeStream.write(`const lines = fs.readFileSync(filePath, "utf-8").trim().split("\\n");\n`);
+  
+          writeStream.end();
+        } else {
+          console.log(`Solution file for day ${i} part 2 already existed. Skipping creation.`)
+        };
+      } catch (err) {
+        console.error(`Could not create or write to file ${solution1FilePath}`, err);
+      }
+    }
+  })
+  .help()
+  .argv
