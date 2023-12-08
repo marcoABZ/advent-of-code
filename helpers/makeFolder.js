@@ -113,6 +113,9 @@ require('yargs')
       });
     
       response.on('end', () => {
+        if (!fs.existsSync(inputFilePath)) {
+          fs.closeSync(fs.openSync(inputFilePath, 'w'));
+        } 
         fs.writeFile(inputFilePath, data, (err) => {
           if (err) {
             console.error(`Error writing to file: ${err.message}`);
