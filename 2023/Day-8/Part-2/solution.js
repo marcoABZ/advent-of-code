@@ -7,26 +7,37 @@ const mapDict = {}
 const mappings = mappingsPartial.split("\n")
 const path = Array.from(pathPartial)
 
-let currentPosition = 'AAA';
-let destination = 'ZZZ';
+let currentPositions = [];
 let i = 0;
 
-mappings.forEach((map, index) => {
+mappings.forEach((map) => {
   const [origin, connections] = map.split("=")
   const [left, right] = connections.split(',')
 
   mapDict[origin.trim()] = { left: left.replace("(", "").trim(), right: right.replace(")", "").trim() }
+  if (origin.trim().endsWith('A')) currentPositions.push(origin.trim())
 })
 
-while (currentPosition !== destination) {
-
-  if (path[i % path.length] === 'R') {
-    currentPosition = mapDict[currentPosition].right 
-  } else {
-    currentPosition = mapDict[currentPosition].left
-  }
+while (!isGoalPosition(currentPositions)) {
+  currentPositions = currentPositions.map(position => {
+    if (path[i % path.length] === 'R') {
+      return mapDict[position].right 
+    } else {
+      return mapDict[position].left
+    }
+  })
 
   i+=1
+}
+
+function isGoalPosition(currentPositions) {
+  let isGoal = true;
+
+  currentPositions.forEach(position => {
+    if (!position.endsWith('Z')) isGoal = false;
+  })
+
+  return isGoal;
 }
 
 console.log(i);
