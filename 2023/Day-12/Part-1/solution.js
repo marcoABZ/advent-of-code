@@ -4,10 +4,17 @@ const filePath = '../input.txt';
 const lines = fs.readFileSync(filePath, "utf-8").trim().split("\n");
 let possibilitiesCount = 0
 
-lines.forEach((line, idx) => {
+lines.forEach((line) => {
   const [springsStatePartial, damagedGroupsSizesPartial] = line.split(" ")
   const springsState = Array.from(springsStatePartial)
   const damagedGroupsSizes = damagedGroupsSizesPartial.split(',').map(size => Number(size))
+
+  let possibleConfigurations = generatePossibilities(springsState)
+  let validConfigurations = countValidConfigurations(possibleConfigurations, damagedGroupsSizes)
+  possibilitiesCount += validConfigurations
+})
+
+function generatePossibilities(springsState) {
   let possibilities = [springsState]
 
   for (let i = 0; i < springsState.length; i++) {
@@ -23,7 +30,11 @@ lines.forEach((line, idx) => {
     }
   }
 
-  possibilities.forEach(possibility => {
+  return possibilities
+}
+
+function countValidConfigurations(possibilities, expectedConfiguration) {
+  function getDamagedGroupSized(possibility) {
     let damagedGroups = []
     let inGroup = false
     let count = 0
@@ -40,16 +51,26 @@ lines.forEach((line, idx) => {
     }
     if (count !== 0) damagedGroups.push(count)
 
-    if (damagedGroups.length !== damagedGroupsSizes.length) return
+    return damagedGroups
+  }
+
+  let validCount = 0
+
+  possibilities.forEach(possibility => {
+    const damagedGroups = getDamagedGroupSized(possibility)
+
+    if (damagedGroups.length !== expectedConfiguration.length) return
     
     for (let i = 0; i < damagedGroups.length; i++) {
-      if (damagedGroups[i] !== damagedGroupsSizes[i]) {
+      if (damagedGroups[i] !== expectedConfiguration[i]) {
         return
       }
     }
     
-    possibilitiesCount += 1
+    validCount += 1
   })
-})
+
+  return validCount
+}
 
 console.log(possibilitiesCount)
